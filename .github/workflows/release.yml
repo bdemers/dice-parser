@@ -48,8 +48,6 @@ jobs:
 
       - name: Version
         id: vars
-        env:
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
           # Configure Git User
           git config --global user.name "GitHub Release Build"
@@ -58,9 +56,9 @@ jobs:
           INPUT_VERSION=${{ github.event.inputs.version }}
           # Autoversion release if no input 
           if [ -z ${INPUT_VERSION+x} ]; then 
-            ${MVN_CMD} release:prepare; 
+            ${MVN_CMD} versions:set -DremoveSnapshot=true; 
           else 
-            ${MVN_CMD} release:prepare -DreleaseVersion=${INPUT_VERSION}; 
+            ${MVN_CMD} versions:set -DnewVersion=${INPUT_VERSION}; 
           fi
           
           # get the current version (possibly auto versioned)
@@ -69,10 +67,19 @@ jobs:
                         -Dexpression=project.version \
                         help:evaluate \
                         | tail -n 1)
-          echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
           
-          # get the TAG name
-          TAG=$(cat release.properties \
-            | grep --only-matching --max-count 1 'scm.tag=.*' \
-            | awk -F'=' '{print $2}')
+          # Set the Tag
+          TAG="dice-parser-${VERSION}"
+          
+          # Commit the change
+          git commit -a -m "[release] Setting version to ${VERSION}"
+          git tag --sign ${TAG} -m "[release] ${VERSION}"
+          
+          # Update to the next SNAPSHOT
+          ${MVN_CMD} versions:set -DnextSnapshot=true
+          
+          git commit -a -m "[release] Setting next development version"
+          
+          echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
           echo "TAG=${TAG}" >> $GITHUB_OUTPUT
+          echo "TAG_SHA=$(git rev-parse ${TAG})" >> $GITHUB_OUTPUT
