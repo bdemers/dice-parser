@@ -46,6 +46,10 @@ jobs:
         env:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
+          # Configure Git User
+          git config --global user.name "GitHub Release Build"
+          git config --global user.email ${{ secrets.RELEASE_EMAIL }}
+         
           INPUT_VERSION=${{ github.event.inputs.version }}
           # Autoversion release if no input 
           if [ -z ${INPUT_VERSION+x} ]; then 
