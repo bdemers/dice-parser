@@ -99,13 +99,13 @@
                     <artifactId>maven-release-plugin</artifactId>
                     <version>3.1.1</version>
                     <configuration>
-                        <!-- do not update upstream, with a pending release. -->
-                        <pushChanges>false</pushChanges>
+                        <pushChanges>true</pushChanges>
+                        <suppressCommitBeforeTag>true</suppressCommitBeforeTag>
+                        <remoteTagging>false</remoteTagging>
                         <localCheckout>true</localCheckout>
                         <preparationGoals>clean verify</preparationGoals>
                         <autoVersionSubmodules>true</autoVersionSubmodules>
                         <tagNameFormat>dice-parser-@{version}</tagNameFormat>
-                        <!-- This configuration copied from apache:apache:7 parent pom -->
                         <useReleaseProfile>false</useReleaseProfile>
                         <goals>deploy</goals>
                         <mavenExecutorId>forked-path</mavenExecutorId>
@@ -349,6 +349,27 @@
                                     <classifier>javadoc</classifier>
                                     <classesDirectory>${basedir}/src/docs</classesDirectory>
                                 </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>sonatype-oss-release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>3.2.7</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
                             </execution>
                         </executions>
                     </plugin>
