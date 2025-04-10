@@ -44,14 +44,14 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:git://github.com/okta/${github.slug}.git</connection>
+        <connection>scm:git:git://github.com/${github.slug}.git</connection>
         <developerConnection>scm:git:ssh://github.com:${github.slug}.git</developerConnection>
         <url>http://github.com/${github.slug}</url>
         <tag>dice-parser-0.1.0</tag>
     </scm>
 
     <properties>
-        <github.org>diceroll-dev</github.org>
+        <github.org>bdemers</github.org>
         <github.project>dice-parser</github.project>
         <github.slug>${github.org}/${github.project}</github.slug>
         <maven.compiler.source>1.8</maven.compiler.source>
