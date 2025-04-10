@@ -55,7 +55,7 @@ jobs:
          
           INPUT_VERSION=${{ github.event.inputs.version }}
           # Autoversion release if no input 
-          if [ -z ${INPUT_VERSION+x} ]; then 
+          if [ -z "$INPUT_VERSION" ]; then 
             echo "Updating version to remove SNAPSHOT"
             ${MVN_CMD} versions:set -DremoveSnapshot=true
           else 
