@@ -21,6 +21,10 @@ on:
       version:
         description: 'Release version'
 
+permissions:
+  actions: read
+  id-token: write
+
 jobs:
   version:
     name: Set Version
