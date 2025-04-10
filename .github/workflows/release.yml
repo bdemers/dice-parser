@@ -23,6 +23,7 @@ on:
 permissions:
   actions: read
   id-token: write
+  contents: read
 
 env:
   JAVA_VERSION: 21
