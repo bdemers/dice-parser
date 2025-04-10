@@ -73,7 +73,7 @@ jobs:
             -Daether.checksums.algorithms=SHA-512,SHA-1,MD5
 
           # echo "changelog-md=./target/jreleaser/release/CHANGELOG.md" >> $GITHUB_OUTPUT
-        env:
+#        env:
 #          NEXUS_USERNAME: ${{ secrets.NEXUS_USER }}
 #          NEXUS_PASSWORD: ${{ secrets.NEXUS_PW }}
 
