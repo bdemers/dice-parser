@@ -16,15 +16,17 @@
 name: Release
 
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Release version'
+  push:
+    tags:
+      - dice-parser-*.**
 
 permissions:
   actions: read
   id-token: write
-  contents: write
+
+env:
+  JAVA_VERSION: 21
+  MAVEN_ARGS: --batch-mode --no-transfer-progress
 
 jobs:
   version:
@@ -32,8 +34,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.vars.outputs.VERSION }}
-    env:
-      MVN_CMD: ./mvnw -V --no-transfer-progress -B
+      tag: ${{ steps.vars.outputs.TAG }}
+      tag-sha: ${{ steps.vars.outputs.TAG_SHA }}
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -49,39 +51,13 @@ jobs:
       - name: Version
         id: vars
         run: |
-          # Configure Git User
-          git config --global user.name "GitHub Release Build"
-          git config --global user.email ${{ secrets.RELEASE_EMAIL }}
-         
-          INPUT_VERSION=${{ github.event.inputs.version }}
-          # Autoversion release if no input 
-          if [ -z "$INPUT_VERSION" ]; then 
-            echo "Updating version to remove SNAPSHOT"
-            ${MVN_CMD} versions:set -DremoveSnapshot=true
-          else 
-            echo "Updating version to ${INPUT_VERSION}"
-            ${MVN_CMD} versions:set -DnewVersion=${INPUT_VERSION} 
-          fi
-          
           # get the current version (possibly auto versioned)
           VERSION=$(./mvnw --non-recursive --quiet --batch-mode \
                         -DforceStdout=true \
                         -Dexpression=project.version \
                         help:evaluate \
                         | tail -n 1)
-          
-          # Set the Tag
-          TAG="dice-parser-${VERSION}"
-          
-          # Commit the change
-          git commit -a -m "[release] Setting version to ${VERSION}"
-          git tag --sign ${TAG} -m "[release] ${VERSION}"
-          
-          # Update to the next SNAPSHOT
-          ${MVN_CMD} versions:set -DnextSnapshot=true
-          
-          git commit -a -m "[release] Setting next development version"
-          
+                    
           echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
-          echo "TAG=${TAG}" >> $GITHUB_OUTPUT
-          echo "TAG_SHA=$(git rev-parse ${TAG})" >> $GITHUB_OUTPUT
+          echo "TAG=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          echo "TAG_SHA=${GITHUB_SHA}" >> $GITHUB_OUTPUT
