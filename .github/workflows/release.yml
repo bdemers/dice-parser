@@ -56,9 +56,11 @@ jobs:
           INPUT_VERSION=${{ github.event.inputs.version }}
           # Autoversion release if no input 
           if [ -z ${INPUT_VERSION+x} ]; then 
-            ${MVN_CMD} versions:set -DremoveSnapshot=true; 
+            echo "Updating version to remove SNAPSHOT"
+            ${MVN_CMD} versions:set -DremoveSnapshot=true
           else 
-            ${MVN_CMD} versions:set -DnewVersion=${INPUT_VERSION}; 
+            echo "Updating version to ${INPUT_VERSION}"
+            ${MVN_CMD} versions:set -DnewVersion=${INPUT_VERSION} 
           fi
           
           # get the current version (possibly auto versioned)
