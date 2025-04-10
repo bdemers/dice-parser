@@ -52,7 +52,7 @@
     </scm>
 
     <properties>
-        <github.org>diceroll-dev</github.org>
+        <github.org>bdemers</github.org>
         <github.project>dice-parser</github.project>
         <github.slug>${github.org}/${github.project}</github.slug>
         <maven.compiler.source>1.8</maven.compiler.source>

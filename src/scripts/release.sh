@@ -38,4 +38,4 @@ git commit -am "[release] Setting version to ${version}"
 
 echo "Creating the tag: ${tag}"
 git tag --sign ${tag} -m "[release] ${version}"
-git push origin ${tag}
+git push bdemers ${tag}
