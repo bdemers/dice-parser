@@ -107,7 +107,7 @@
                         <autoVersionSubmodules>true</autoVersionSubmodules>
                         <tagNameFormat>dice-parser-@{version}</tagNameFormat>
                         <useReleaseProfile>false</useReleaseProfile>
-                        <goals>deploy</goals>
+                        <goals>verify</goals>
                         <mavenExecutorId>forked-path</mavenExecutorId>
                         <arguments>-Pdocs,sonatype-oss-release</arguments>
                     </configuration>
