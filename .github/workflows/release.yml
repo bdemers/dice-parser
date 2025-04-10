@@ -38,9 +38,13 @@ jobs:
         with:
           java-version: 21
           distribution: adopt
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: GPG_PASSPHRASE
 
       - name: Version
         id: vars
+        env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
           INPUT_VERSION=${{ github.event.inputs.version }}
           # Autoversion release if no input 
